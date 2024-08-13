@@ -1,7 +1,7 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { createUserWithEmailAndPassword, getAuth } from "firebase/auth";
-import { getFirestore, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc } from "firebase/firestore";
 import { toast } from "react-toastify";
 
 const firebaseConfig = {
@@ -23,6 +23,8 @@ const signup = async (username,email,password) => {
     try { 
         const res = await createUserWithEmailAndPassword(auth,email,password);
         const user = res.user;
+
+        // console.log("User UID:",user.uid);
         await setDoc(doc(db,"users",user.uid),{
             id:user.uid,
             username:username.toLowerCase(),

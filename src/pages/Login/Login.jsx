@@ -24,9 +24,9 @@ const Login = () => {
         <form onSubmit={onSubmitHandler} className='login-form'>
           <h2>{CurrState}</h2>
           {CurrState === "Sign up"?<input onChange={(e)=>setUserName(e.target.value)} value={userName} type="text" placeholder='username' className="form-input" required/>:null}
-          <input type="email" placeholder='Email address' className="form-input" required/>
-          <input onChange={(e)=>setEmail(e.target.value)} value={email} type="password" placeholder='password' className="form-input" required/>
-          <button onChange={(e)=>setPassword(e.target.value)} value={password} type='submit'>{CurrState === "Sign up"?"Create account":"Login now"}</button>
+          <input onChange={(e)=>setEmail(e.target.value)} value={email} type="email" placeholder='Email address' className="form-input" required/>
+          <input onChange={(e)=>setPassword(e.target.value)} value={password} placeholder='password' className="form-input" required/>
+          <button type='submit'>{CurrState === "Sign up"?"Create account":"Login now"}</button>
           <div className="login-term">
             <input type="checkbox" />
             <p>Agree to the terms of use & privasy policy. </p>
