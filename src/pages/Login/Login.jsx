@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import './Login.css'
 import assets from '../../assets/assets'
-import { signup } from '../../config/firebase.js'
+import { signup, login } from '../../config/firebase.js'
 
 const Login = () => {
 
@@ -15,6 +15,9 @@ const Login = () => {
     if (CurrState==="Sign up") {
         signup(userName,email,password);
     }
+    else{
+      login(email,password);
+    }
   }
 
 
@@ -25,7 +28,7 @@ const Login = () => {
           <h2>{CurrState}</h2>
           {CurrState === "Sign up"?<input onChange={(e)=>setUserName(e.target.value)} value={userName} type="text" placeholder='username' className="form-input" required/>:null}
           <input onChange={(e)=>setEmail(e.target.value)} value={email} type="email" placeholder='Email address' className="form-input" required/>
-          <input onChange={(e)=>setPassword(e.target.value)} value={password} placeholder='password' className="form-input" required/>
+          <input onChange={(e)=>setPassword(e.target.value)} value={password} type='password' placeholder='password' className="form-input" required/>
           <button type='submit'>{CurrState === "Sign up"?"Create account":"Login now"}</button>
           <div className="login-term">
             <input type="checkbox" />
