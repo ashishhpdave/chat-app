@@ -3,9 +3,10 @@ import './ProfileUpdate.css'
 import assets from '../../assets/assets'
 import { onAuthStateChanged, validatePassword } from 'firebase/auth';
 import { auth, db } from '../../config/firebase';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import upload from '../../lib/upload';
 
 const ProfileUpdate = () => {
 
@@ -20,10 +21,25 @@ const ProfileUpdate = () => {
     event.preventDefault();
     try {
 
-      if (!prevImage && image) {
+      if (!prevImage && !image) {
         toast.error("Upload profile picture")
       }
-
+      const docRef = doc(db, 'users',uid);
+      if (image) {
+        const imgUrl = await upload(image);
+        setPrevImage(imgUrl);
+        await updateDoc(docRef,{
+          avatar:imgUrl,
+          bio:bio,
+          name:name
+        })
+      }
+        else{
+          await updateDoc(docRef,{
+            bio:bio,
+            name:name
+          })
+        }
     } catch (error) {
       
     }
