@@ -27,13 +27,13 @@ const upload = async (file) => {
             () => {
     
                 getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    return(downloadURL)
+                    resolve(downloadURL);
                 });
             }
         );
-    }
     })
 
-   
+
+}
 
 export default upload;
