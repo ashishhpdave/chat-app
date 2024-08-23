@@ -53,7 +53,7 @@ const AppContextProvider = (props) =>{
                 
                 const tempData = [];
                 for(const item of chatItems){
-                    const userRef = doc(db,'users',item.rid);
+                    const userRef = doc(db,'users',item.rId);
                     const userSnap = await getDoc(userRef);
                     const userData = userSnap.data();
                     tempData.push({...item,userData})
