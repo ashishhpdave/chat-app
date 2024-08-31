@@ -48,13 +48,28 @@ const ChatBox = () => {
     } catch (error) {
       toast.error(error.message);
     }
+    setInput("")
+  }
+
+  const converTimestamp = (timestamp) =>{
+    if (timestamp && typeof timestamp.toDate === 'function') {
+      let date = timestamp.toDate();
+      const hour = date.getHours();
+      const minute = date.getMinutes();
+      if (hour > 12) {
+        return hour - 12 + ":" + minute + " PM";
+      } else {
+        return hour + ":" + minute + " AM";
+      }
+    } else {
+      return ""; // Ya koi default value
+    }
   }
 
   useEffect(()=>{
     if (messagesId) {
       const unSub = onSnapshot(doc(db,'messages',messagesId),(res)=>{
-        setMessages(res.data().messages.reverse())
-        console.log(res.data().messages.reverse());
+        setMessages(res.data().messages.reverse());
         
       })
       return ()=>{
@@ -73,30 +88,19 @@ const ChatBox = () => {
 
 
       <div className="chat-msg">
-        <div className="s-msg">
-          <p className="msg">Lorem ipsum is placeholder text commonly used in..</p>
-          <div>
-            <img src={assets.profile_img} alt="" />
-            <p>2:30 PM</p>
-          </div>
-        </div>
-        <div className="s-msg">
-          <img className='msg-img' src={assets.pic1} alt="" />
-          <div>
-            <img src={assets.profile_img} alt="" />
-            <p>2:30 PM</p>
-          </div>
-        </div>
 
-        <div className="r-msg">
-          <p className="msg">Lorem ipsum is placeholder text commonly used in..</p>
+        {messages.map((msg,index)=>{
+          return (
+          <div key={index} className={msg.sId === userData.id ? "s-msg" : "r-msg"}>
+          <p className="msg">{msg.text}</p>
           <div>
-            <img src={assets.profile_img} alt="" />
-            <p>2:30 PM</p>
+            <img src={msg.sId === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
+            <p>{converTimestamp(msg.createdAt)}</p>
           </div>
         </div>
+          );
+        })}    
       </div>
-
 
       <div className="chat-input">
         <input onChange={(e)=>setInput(e.target.value)} value={input} type="text" placeholder='Send a message' />
