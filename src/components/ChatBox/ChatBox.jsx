@@ -20,7 +20,7 @@ const ChatBox = () => {
           messages:arrayUnion({
             sId:userData.id,
             text:input,
-            createAt:new Date()
+            createdAt:new Date()
           })
         })
 
@@ -51,16 +51,19 @@ const ChatBox = () => {
     setInput("")
   }
 
-  const converTimestamp = (timestamp) =>{
+  const convertTimestamp = (timestamp) =>{
     if (timestamp && typeof timestamp.toDate === 'function') {
       let date = timestamp.toDate();
       const hour = date.getHours();
       const minute = date.getMinutes();
-      if (hour > 12) {
-        return hour - 12 + ":" + minute + " PM";
-      } else {
-        return hour + ":" + minute + " AM";
+      if (hour>12) {
+        return hour-12 + ":" + minute + "PM";
       }
+      else{
+        return hour + ":" + minute + "AM";
+
+      }
+    
     } else {
       return ""; // Ya koi default value
     }
@@ -95,7 +98,7 @@ const ChatBox = () => {
           <p className="msg">{msg.text}</p>
           <div>
             <img src={msg.sId === userData.id ? userData.avatar : chatUser.userData.avatar} alt="" />
-            <p>{converTimestamp(msg.createdAt)}</p>
+            <p>{convertTimestamp(msg.createdAt)}</p>
           </div>
         </div>
           );
