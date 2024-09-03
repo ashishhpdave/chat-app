@@ -69,7 +69,7 @@ const resetPass = async (email) => {
         return null;
     }
     try {
-        const userRef = collection(db,'user');
+        const userRef = collection(db,'users');
         const q = query(userRef,where("email","==",email));
         const querySnap = await getDocs(q);
         if (!querySnap.empty) {
