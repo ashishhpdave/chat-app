@@ -14,40 +14,67 @@ const LeftSidebar = () => {
   const [user, setUser] = useState(null);
   const [showSearch, setShowSearch] = useState(false);
 
+  // const inputHandler = async (e) => {
+  //   try {
+  //     const input = e.target.value;
+  //     if (input) {
+  //       setShowSearch(true);
+  //       const userRef = collection(db, 'users');
+  //       const q = query(userRef, where("username", "==", input.toLowerCase()));
+  //       const querySnap = await getDocs(q);
+  //       if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
+  //         let userExist = false;
+  //         chatData.map((user) => {
+  //           if (user.rId === querySnap.docs[0].data().id) {
+  //             userExist = true;
+  //           }
+  //         })
+  //         if (!userExist) {
+  //           setUser((querySnap.docs[0].data()));
+  //         }
+  //       }
+  //       else {
+  //         setUser(null);
+  //       }
+  //     }
+  //     else {
+  //       setShowSearch(false);
+  //     }
+
+  //   } catch (error) {
+
+  //   }
+  // }
+
+  // -------------------------------
+
   const inputHandler = async (e) => {
     try {
       const input = e.target.value;
       if (input) {
         setShowSearch(true);
         const userRef = collection(db, 'users');
-        const q = query(userRef, where("username", "==", input.toLowerCase()));
+        const q = query(userRef, where("username", ">=", input.toLowerCase()), where("username", "<=", input.toLowerCase() + '\uf8ff'));
         const querySnap = await getDocs(q);
-        if (!querySnap.empty && querySnap.docs[0].data().id !== userData.id) {
-          let userExist = false;
-          chatData.map((user) => {
-            if (user.rId === querySnap.docs[0].data().id) {
-              userExist = true;
-            }
-          })
-          if (!userExist) {
-            setUser((querySnap.docs[0].data()));
+        
+        let foundUser = null;
+        querySnap.forEach((doc) => {
+          if (doc.id !== userData.id) {
+            foundUser = doc.data();  // Assign found user to the state variable
           }
-        }
-        else {
-          setUser(null);
-        }
-      }
-      else {
+        });
+  
+        setUser(foundUser ? foundUser : null); // Set user if found, otherwise null
+      } else {
         setShowSearch(false);
       }
-
     } catch (error) {
-
+      console.error("Error searching users:", error);  // Logs the error if insufficient permissions occur
     }
-  }
-
-  // -------------------------------
-
+  };
+  
+  
+  
   const addChat = async () => {
     const messageRef = collection(db, "messages");
     const chatsRef = collection(db, "chats");

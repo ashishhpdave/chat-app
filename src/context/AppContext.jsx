@@ -52,27 +52,53 @@ const AppContextProvider = (props) =>{
         chatVisible,setChatVisible
     }
 
-    useEffect(()=>{
-        if (userData) {
-            const chatRef = doc(db,'chats',userData.id);
-            const unSUb = onSnapshot(chatRef,async (res) => {
-                const chatItems = res.data().chatsData;
+
+    useEffect(() => {
+        if (userData && userData.id) {  // Check if userData and userData.id are available
+          const chatRef = doc(db, 'chats', userData.id);
+          
+          const unSub = onSnapshot(chatRef, async (res) => {
+            const chatItems = res.data().chatsData;
+            const tempData = [];
+            
+            for (const item of chatItems) {
+              const userRef = doc(db, 'users', item.rId);
+              const userSnap = await getDoc(userRef);
+              const userData = userSnap.data();
+              tempData.push({ ...item, userData });
+            }
+      
+            setChatData(tempData.sort((a, b) => b.updatedAt - a.updatedAt));
+          });
+      
+          return () => {
+            unSub();  // Cleanup the subscription when the component unmounts
+          };
+        }
+      }, [userData]);  // Only run the effect when userData changes
+
+      
+    // useEffect(()=>{
+    //     if (userData) {
+    //         const chatRef = doc(db,'chats',userData.id);
+    //         const unSUb = onSnapshot(chatRef,async (res) => {
+    //             const chatItems = res.data().chatsData;
             
                 
-                const tempData = [];
-                for(const item of chatItems){
-                    const userRef = doc(db,'users',item.rId);
-                    const userSnap = await getDoc(userRef);
-                    const userData = userSnap.data();
-                    tempData.push({...item,userData})
-                }
-                setChatData(tempData.sort((a,b)=>b.updatedAt - a.updatedAt))
-            })
-            return () => {
-                unSUb();
-            }
-        }
-    },[userData])
+    //             const tempData = [];
+    //             for(const item of chatItems){
+    //                 const userRef = doc(db,'users',item.rId);
+    //                 const userSnap = await getDoc(userRef);
+    //                 const userData = userSnap.data();
+    //                 tempData.push({...item,userData})
+    //             }
+    //             setChatData(tempData.sort((a,b)=>b.updatedAt - a.updatedAt))
+    //         })
+    //         return () => {
+    //             unSUb();
+    //         }
+    //     }
+    // },[userData])
 
     return (
         <AppContext.Provider value={value}>
